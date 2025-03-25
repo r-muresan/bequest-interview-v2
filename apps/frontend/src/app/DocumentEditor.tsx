@@ -23,19 +23,19 @@ import { useEffect, useRef } from 'react';
 export const DocumentEditor = () => {
   const editorRef = useRef<DocumentEditorContainerComponent | null>(null);
   useEffect(() => {
-    if (editorRef.current && sessionStorage.getItem('currentDocument')) {
-      editorRef.current.documentEditor.open(sessionStorage.getItem('currentDocument') ?? '');
+    if (editorRef.current && localStorage.getItem('currentDocument')) {
+      editorRef.current.documentEditor.open(localStorage.getItem('currentDocument') ?? '');
     }
   }, []);
 
   useEffect(() => {
     if (editorRef.current) {
       editorRef.current.documentEditor.documentChange = () => {
-        sessionStorage.setItem('currentDocument', editorRef.current?.documentEditor.serialize() ?? '');
+        localStorage.setItem('currentDocument', editorRef.current?.documentEditor.serialize() ?? '');
       };
 
       editorRef.current.documentEditor.contentChange = () => {
-        sessionStorage.setItem('currentDocument', editorRef.current?.documentEditor.serialize() ?? '');
+        localStorage.setItem('currentDocument', editorRef.current?.documentEditor.serialize() ?? '');
       };
     }
   }, []);
