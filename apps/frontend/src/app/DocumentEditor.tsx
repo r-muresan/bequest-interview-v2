@@ -18,12 +18,33 @@ import '@syncfusion/ej2-splitbuttons/styles/material.css';
 import '@syncfusion/ej2-dropdowns/styles/material.css';
 import '@syncfusion/ej2-react-documenteditor/styles/material.css';
 import { registerLicense } from '@syncfusion/ej2-base';
+import { useEffect, useRef } from 'react';
 
 export const DocumentEditor = () => {
+  const editorRef = useRef<DocumentEditorContainerComponent | null>(null);
+  useEffect(() => {
+    if (editorRef.current && sessionStorage.getItem('currentDocument')) {
+      editorRef.current.documentEditor.open(sessionStorage.getItem('currentDocument') ?? '');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.documentEditor.documentChange = () => {
+        sessionStorage.setItem('currentDocument', editorRef.current?.documentEditor.serialize() ?? '');
+      };
+
+      editorRef.current.documentEditor.contentChange = () => {
+        sessionStorage.setItem('currentDocument', editorRef.current?.documentEditor.serialize() ?? '');
+      };
+    }
+  }, []);
+
   return (
     <>
       <div className="flex justify-center px-24 bg-gray-300 pt-12 h-screen">
         <DocumentEditorContainerComponent
+          ref={editorRef}
           height="calc(100vh - 125px)"
           serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/"
           enableToolbar={true}
